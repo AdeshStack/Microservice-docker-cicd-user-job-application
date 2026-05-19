@@ -17,7 +17,7 @@ pipeline {
         stage('Build Service Registry') {
             steps {
                 dir('service-discovery/service-discovery') {
-                    sh 'mvn clean package -DskipTests'
+                   bat 'mvnw.cmd clean package -DskipTests'
                 }
             }
         }
@@ -25,7 +25,7 @@ pipeline {
         stage('Build User Service') {
             steps {
                 dir('UserServiceMS') {
-                    sh 'mvn clean package -DskipTests'
+                   bat 'mvnw.cmd clean package -DskipTests'
                 }
             }
         }
