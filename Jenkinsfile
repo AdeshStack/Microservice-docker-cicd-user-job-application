@@ -6,17 +6,17 @@ pipeline {
         DOCKER_USERNAME = "adeshprime17"
     }
 
-    stages {
-
-        stage('Clone Code') {
+     stages {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/AdeshStack/Microservice-docker-cicd-user-job-application.git'
+                echo 'Checking out source code...'
+                checkout scm
             }
         }
 
         stage('Build Service Registry') {
             steps {
-                dir('service-discovery') {
+                dir('service-discovery/service-discovery') {
                     sh 'mvn clean package -DskipTests'
                 }
             }
