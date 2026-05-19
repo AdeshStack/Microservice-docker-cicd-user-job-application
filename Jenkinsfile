@@ -30,46 +30,53 @@ pipeline {
             }
         }
 
-        stage('Build Docker Images') {
-            steps {
+      stage('Build Docker Images') {
+    steps {
 
-                dir('service-discovery') {
-                    sh 'docker build -t $DOCKER_USERNAME/service-registry:latest .'
-                }
+        dir('service-discovery/service-discovery') {
+            echo 'Building Docker image for service registry...'
 
-                dir('UserServiceMS') {
-                    sh 'docker build -t $DOCKER_USERNAME/user-service:latest .'
-                }
-            }
+            bat 'docker build -t %DOCKER_USERNAME%/service-registry:latest .'
         }
 
-        stage('Docker Login') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
+        dir('UserServiceMS') {
+            echo 'Building Docker image for user service...'
 
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                }
-            }
+            bat 'docker build -t %DOCKER_USERNAME%/user-service:latest .'
         }
+    }
+}
 
-        stage('Push Docker Images') {
-            steps {
+      stage('Docker Login') {
+    steps {
 
-                sh 'docker push $DOCKER_USERNAME/service-registry:latest'
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
 
-                sh 'docker push $DOCKER_USERNAME/user-service:latest'
-            }
+            bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
         }
+    }
+}
 
-        stage('Deploy Using Docker Compose') {
-            steps {
-                sh 'docker compose down'
-                sh 'docker compose up -d'
-            }
-        }
+stage('Push Docker Images') {
+    steps {
+
+        bat 'docker push %DOCKER_USERNAME%/service-registry:latest'
+
+        bat 'docker push %DOCKER_USERNAME%/user-service:latest'
+    }
+}
+
+stage('Deploy Using Docker Compose') {
+    steps {
+
+        bat 'docker compose down'
+
+        bat 'docker compose up -d'
+    }
+}
     }
 }
