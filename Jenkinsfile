@@ -30,6 +30,8 @@ pipeline {
             }
         }
 
+		
+
       stage('Build Docker Images') {
     steps {
 
@@ -61,6 +63,20 @@ pipeline {
                 }
             }
         }
+
+		 stage('Remove old container') {
+
+    steps {
+
+        echo 'Removing old service-registry container'
+
+        bat 'docker rm -f service-registry || exit 0'
+
+        echo 'Removing old user-service container'
+
+        bat 'docker rm -f user-service || exit 0'
+    }
+}
 
 stage('Deploy Using Docker Compose') {
     steps {
