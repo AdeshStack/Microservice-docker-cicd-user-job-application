@@ -31,7 +31,7 @@ pipeline {
         }
 
 		
-
+ // build the image to push it to docker hub only
       stage('Build Docker Images') {
     steps {
 
