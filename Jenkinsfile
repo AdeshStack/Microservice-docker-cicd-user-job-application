@@ -10,7 +10,7 @@ pipeline {
 
         stage('Clone Code') {
             steps {
-                git 'YOUR_GITHUB_REPO_URL'
+                git 'https://github.com/AdeshStack/Microservice-docker-cicd-user-job-application.git'
             }
         }
 
